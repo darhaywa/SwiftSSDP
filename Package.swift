@@ -1,9 +1,17 @@
+// swift-tools-version:4.0
 import PackageDescription
 
 let package = Package(
     name: "SwiftSSDP",
+    products: [
+        .library(name: "SwiftSSDP", targets: ["SwiftSSDP"])
+    ],
     dependencies: [
-        .Package(url: "https://github.com/pryomoax/SwiftAbstractLogger.git", majorVersion: 0, minor: 3),
-        .Package(url: "https://github.com/robbiehanson/CocoaAsyncSocket.git", majorVersion: 7, minor: 6),
+        .package(url: "https://github.com/davidrankin2/SwiftAbstractLogger.git", from: "0.4.0"),
+        .package(url: "https://github.com/davidrankin2/CocoaAsyncSocket.git", from: "7.6.4"),
+    ],
+    targets: [
+    	.target(name: "SwiftSSDP",
+		path: "SwiftSSDP")
     ]
 )
