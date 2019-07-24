@@ -8,7 +8,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/davidrankin2/SwiftAbstractLogger.git", from: "0.3.1"),
-        .package(url: "https://github.com/davidrankin2/CocoaAsyncSocket.git", from: "7.6.4"),
+        .package(url: "file:///Users/drankin/Dropbox/RankinFiles/work/CocoaAsyncSocket", from: "7.9.9"),
     ],
     targets: [
     	.target(name: "SwiftSSDP",
