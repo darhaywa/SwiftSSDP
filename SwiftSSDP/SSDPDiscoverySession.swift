@@ -113,11 +113,16 @@ public class SSDPDiscoverySession: Equatable {
             // Intended to reference `self` because we can use fire-and-forget when using a timer
             // close() will cancel the timer in other cases and deinit.
             DispatchQueue.global(qos: .background).async {
-                self.timeoutTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { (timer) in
-                    self.forceClose()
-                })
+                if #available(iOS 10.0, *) {
+                    self.timeoutTimer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false, block: { (timer) in
+                        self.forceClose()
+                    })
+                } else {
+                    // Fallback on earlier versions
+                    logError(category: loggerDiscoveryCategory, "Support for versions before iOS 10.0 needs implementing!")
+                }
                 let runLoop=RunLoop.current
-                runLoop.add(self.timeoutTimer!, forMode: .default)
+                runLoop.add(self.timeoutTimer!, forMode: RunLoopMode.defaultRunLoopMode)
                 runLoop.run()
             }
         }
@@ -146,11 +151,16 @@ public class SSDPDiscoverySession: Equatable {
         
         let interval = now.timeIntervalSince(self.startDate)
         let cadence = SSDPDiscoverySession.timerCadence(forTimeInterval: interval)
-        self.broadcastTimer = Timer.scheduledTimer(withTimeInterval: cadence, repeats: false, block: { [unowned self] (Timer) in
-            if (self.phase == .searching) {
-                self.sendSearchRequest()
-            }
-        })
+        if #available(iOS 10.0, *) {
+            self.broadcastTimer = Timer.scheduledTimer(withTimeInterval: cadence, repeats: false, block: { [unowned self] (Timer) in
+                if (self.phase == .searching) {
+                    self.sendSearchRequest()
+                }
+            })
+        } else {
+            // Fallback on earlier versions
+            logError(category: loggerDiscoveryCategory, "Support for versions before iOS 10.0 needs implementing!")
+        }
         
         // Log a check to ensure the session is correctly closed
         if now.timeIntervalSince(self.checkDate) > 30 {
