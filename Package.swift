@@ -12,6 +12,7 @@ let package = Package(
     ],
     targets: [
     	.target(name: "SwiftSSDP",
+		dependencies: ["SwiftAbstractLogger", "CocoaAsyncSocket"],
 		path: "SwiftSSDP")
     ]
 )
